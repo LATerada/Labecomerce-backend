@@ -1,4 +1,3 @@
-import { userInfo } from "os";
 import { TICKETS_CATEGORY, TProduct, TPurschase, TUser } from "./types";
 
 export const users: TUser[] = [
