@@ -7,7 +7,7 @@ export type TProduct = {
   id: string;
   name: string;
   price: number;
-  category: string;
+  category: TICKETS_CATEGORY;
 };
 export type TPurschase = {
   userId: string;
@@ -15,3 +15,9 @@ export type TPurschase = {
   quantity: number;
   totalPrice: number;
 };
+export enum TICKETS_CATEGORY{
+  MUSEUM = "museum",
+  OBSERVATORY = "observatory",
+  LIBRARY = "library",
+  ZOO = "zoo"
+}
