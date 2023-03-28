@@ -7,6 +7,12 @@ import { createUsers } from "./endpoints/createUsers";
 import { searchProductsByName } from "./endpoints/searchProductByName";
 import { createProduct } from "./endpoints/createProduct";
 import { createPurchase } from "./endpoints/createPurchase";
+import { getProductById } from "./endpoints/getProductById";
+import { getUserPurchaseByUserId } from "./endpoints/getUserPurchaseByUserId";
+import { deleteUserById } from "./endpoints/deleteUserById";
+import { deleteProductById } from "./endpoints/deleteProductById";
+import { editUserById } from "./endpoints/editUserById";
+import { editProductById } from "./endpoints/editProductById";
 
 const app = express();
 
@@ -37,3 +43,21 @@ app.post("/products", createProduct);
 
 // createPurchase
 app.post("/purchases", createPurchase);
+
+// getProductById
+app.get("/products/:id", getProductById);
+
+// getUserPurchaseByUserId
+app.get("/purchases/:id", getUserPurchaseByUserId);
+
+// deleteUserById
+app.delete("/users/:id", deleteUserById);
+
+// deleteProductById
+app.delete("/products/:id", deleteProductById);
+
+// editUserById
+app.put("/users/:id", editUserById);
+
+// editProductById
+app.put("/products/:id", editProductById);
