@@ -18,6 +18,15 @@ export const getUserPurchaseByUserId = (req: Request, res: Response) => {
     });
     res.status(200).send(userPurchaseList);
   } catch (error) {
-    res.send(error.message);
+    console.log(error);
+
+    if (res.statusCode === 200) {
+      res.status(500);
+    }
+    if (error instanceof Error) {
+      res.send(error.message);
+    } else {
+      res.send("Erro inesperado.");
+    }
   }
 };

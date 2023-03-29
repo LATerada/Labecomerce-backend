@@ -13,6 +13,7 @@ import { deleteUserById } from "./endpoints/deleteUserById";
 import { deleteProductById } from "./endpoints/deleteProductById";
 import { editUserById } from "./endpoints/editUserById";
 import { editProductById } from "./endpoints/editProductById";
+import { getAllPurchases } from "./endpoints/getAllPurhcases";
 
 const app = express();
 
@@ -31,6 +32,9 @@ app.get("/users", getAllUsers);
 
 // getAllProducts
 app.get("/products", getAllProducts);
+
+//getAllPurchases
+app.get("/purchases", getAllPurchases);
 
 // searchProductByName
 app.get("/products/search", searchProductsByName);

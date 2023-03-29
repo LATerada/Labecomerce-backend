@@ -17,8 +17,17 @@ export const deleteUserById = (req: Request, res: Response) => {
     if (userIndex >= 0) {
       users.splice(userIndex, 1);
     }
-    res.status(200).send("User apagado com sucesso");
+    res.status(200).send("User deletado com sucesso");
   } catch (error) {
-    res.send(error.message);
+    console.log(error);
+
+    if (res.statusCode === 200) {
+      res.status(500);
+    }
+    if (error instanceof Error) {
+      res.send(error.message);
+    } else {
+      res.send("Erro inesperado.");
+    }
   }
 };

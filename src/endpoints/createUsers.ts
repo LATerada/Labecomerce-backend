@@ -11,14 +11,28 @@ export const createUsers = (req: Request, res: Response) => {
     if (!id) {
       res.status(400);
       throw new Error("É necessário incluir um 'id'");
+    } else if (typeof id !== "string") {
+      res.status(400);
+      throw new Error("'id' deve ser do tipo string");
     }
+
     if (!email) {
       res.status(400);
       throw new Error("É necessário incluir um 'email'");
+    } else if (typeof email !== "string") {
+      res.status(400);
+      throw new Error("'email' deve ser do tipo string");
     }
+
     if (!password) {
       res.status(400);
       throw new Error("É necessário incluir um 'password'");
+    } else if (typeof password !== "string") {
+      res.status(400);
+      throw new Error("'password' deve ser do tipo string");
+    } else if (password.length <= 8) {
+      res.status(400);
+      throw new Error("'password' com no mínimo 8 caracteres.");
     }
 
     const idUsed = users.find((user) => {
@@ -45,6 +59,15 @@ export const createUsers = (req: Request, res: Response) => {
     users.push(newUser);
     res.status(201).send("Usuário criado com sucesso.");
   } catch (error) {
-    res.send(error.message);
+    console.log(error);
+
+    if (res.statusCode === 200) {
+      res.status(500);
+    }
+    if (error instanceof Error) {
+      res.send(error.message);
+    } else {
+      res.send("Erro inesperado.");
+    }
   }
 };

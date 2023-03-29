@@ -11,14 +11,61 @@ export const editProductById = (req: Request, res: Response) => {
     const newPrice = req.body.price as number | undefined;
     const newCategory = req.body.category as TICKETS_CATEGORY | undefined;
 
-    const newIdUsed = products.find((product) => {
-      return product.id === id;
-    });
-    if (newIdUsed) {
-      res.status(409);
-      throw new Error("'id' já existe.");
+    if (newId !== undefined) {
+      if (typeof newId !== "string") {
+        res.status(400);
+        throw new Error("'id' inválido. Deve ser do tipo string.");
+      }
     }
-    
+
+    if (newName !== undefined) {
+      if (typeof newName !== "string") {
+        res.status(400);
+        throw new Error("'name' inválido. Deve ser do tipo string.");
+      }
+    }
+
+    if (newPrice !== undefined) {
+      if (typeof newPrice !== "number") {
+        res.status(400);
+        throw new Error("'price' deve ser do tipo number");
+      }
+      if (newPrice < 0) {
+        res.status(400);
+        throw new Error("'price' deve ser maior ou igual a zero.");
+      }
+    }
+
+    if (newCategory !== undefined) {
+      if (
+        newCategory !== TICKETS_CATEGORY.LIBRARY &&
+        newCategory !== TICKETS_CATEGORY.MUSEUM &&
+        newCategory !== TICKETS_CATEGORY.OBSERVATORY &&
+        newCategory !== TICKETS_CATEGORY.ZOO
+      ) {
+        res.status(400);
+        throw new Error("'type' deve ser um dos tipos válidos");
+      }
+    }
+
+    const newIdUsed = products.find((product) => {
+      return product.id === newId;
+    });
+    if (newIdUsed !== undefined) {
+      if (newIdUsed) {
+        res.status(409);
+        throw new Error("O 'id' já existe.");
+      }
+    }
+
+    const newNameUsed = products.find((product) => {
+      return product.name === newName;
+    });
+    if (newNameUsed) {
+      res.status(409);
+      throw new Error("O 'name' já existe.");
+    }
+
     const productToEdit = products.find((product) => {
       return product.id === id;
     });
@@ -35,6 +82,15 @@ export const editProductById = (req: Request, res: Response) => {
 
     res.status(200).send("Produto atualizado com sucesso");
   } catch (error) {
-    res.send(error.message);
+    console.log(error);
+
+    if (res.statusCode === 200) {
+      res.status(500);
+    }
+    if (error instanceof Error) {
+      res.send(error.message);
+    } else {
+      res.send("Erro inesperado.");
+    }
   }
 };
