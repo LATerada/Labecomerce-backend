@@ -9,6 +9,8 @@ Meu primeiro projeto do back-end, onde pratiquei toda a base de criação de uma
 - <a href="#rodar">Como rodar este projeto?</a>
 - <a href="#tecnologias">Conteúdos abordados</a>
 - <a href="#autoras">Pessoa Autora</a>
+- 
+- [Pessoa Autora](https://github.com/LATerada/labecommerce-backend/blob/main/README.md#%EF%B8%8F-pessoa-autora)
 
 
 ## 📄 Documentação
