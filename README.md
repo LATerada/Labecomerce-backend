@@ -1,4 +1,4 @@
-# Labecommerce-backend
+# Projeto labecommerce-backend
 
 ![Documentação](./src/assets/API.png)
 Meu primeiro projeto do back-end, onde pratiquei toda a base de criação de uma API vinculada a um banco de dados real.
