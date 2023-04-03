@@ -1,4 +1,4 @@
-# Labecomerce-backend
+# Labecommerce-backend
 
 ![Documentação](./src/assets/API.png)
 Meu primeiro projeto do back-end, onde pratiquei toda a base de criação de uma API vinculada a um banco de dados real.
@@ -23,7 +23,7 @@ Meu primeiro projeto do back-end, onde pratiquei toda a base de criação de uma
 $ git clone linkrepo
 
 # Acesse a pasta do projeto no seu terminal
-$ cd Labecommerce-backend
+$ cd labecommmerce-backend
 
 # Instale as dependências
 $ npm install
