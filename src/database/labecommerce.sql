@@ -1,4 +1,4 @@
--- Active: 1680539180762@@127.0.0.1@3306
+-- Active: 1680617537489@@127.0.0.1@3306
 
 CREATE TABLE
     users (
@@ -36,3 +36,37 @@ INSERT INTO products
         ("p002", "Product02", 20, "Zoo"),
         ("p003", "Product03", 5, "Library"), 
         ("p004", "Product04", 30, "Museum");
+
+SELECT * FROM products
+WHERE name = 'monitor';
+
+INSERT INTO users
+    VALUES ("u003", "user3@email.com", 12303);
+
+INSERT INTO products
+    VALUES ("p005", "Product05", 40, "Observatory");
+
+SELECT * FROM products
+WHERE id = "p002";
+
+DELETE FROM products
+WHERE id = "p005";
+
+UPDATE users
+ SET password = 12300 
+ WHERE id = 'u000';
+
+UPDATE products
+    SET category = "museum"
+    WHERE id = "p004";
+
+SELECT * FROM users
+ORDER BY email ASC;
+
+SELECT * FROM products
+ORDER BY price ASC
+LIMIT 20;
+
+SELECT * FROM products
+WHERE price > 10 AND price < 30
+ORDER BY  price ASC;
