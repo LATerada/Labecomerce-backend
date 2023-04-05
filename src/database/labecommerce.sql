@@ -92,3 +92,38 @@ LIMIT 20;
 SELECT * FROM products
 WHERE price > 10 AND price < 30
 ORDER BY price ASC;
+
+
+--  --------------------| PURCHASES |---------------------------
+-- createPurchases
+CREATE TABLE purchases (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    total_price REAL NOT NULL,
+    paid INTEGER NOT NULL,
+    delivered_at TEXT,
+    buyer_id TEXT NOT NULL,
+    Foreign Key (buyer_id) REFERENCES users(id)
+);
+SELECT * FROM purchases;
+
+-- createPurchase
+INSERT INTO purchases
+    VALUES
+        ("pr000", 120, 0, NUll, "u000"),
+        ("pr001", 50, 0, NUll, "u000"),
+        ("pr002", 500, 0, NUll, "u001"),
+        ("pr003", 50, 0, NUll, "u002"),
+        ("pr004", 110, 0, NUll, "u002"),
+        ("pr005", 90, 0, NUll, "u003");
+
+DELETE FROM purchases
+WHERE id = "pr003";
+
+UPDATE purchases
+SET delivered_at = DATE("now") 
+WHERE id in ("p000","p001","pr002","pr003","p004","p005");
+
+SELECT * FROM purchases
+INNER JOIN users
+ON purchases.buyer_id = users.id
+WHERE users.id = "u000";
