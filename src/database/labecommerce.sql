@@ -1,7 +1,8 @@
 -- Active: 1680617537489@@127.0.0.1@3306
 
--- ---------------------- | USERS | --------------------------
--- Create users
+
+-- |    USERS   |
+
 CREATE TABLE
     users (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
@@ -9,39 +10,29 @@ CREATE TABLE
         password TEXT NOT NULL
     );
 
--- getAllUsers
-SELECT * FROM users;
-
--- createUsers
 INSERT INTO users VALUES("u000", "user0@email.com", 12300);
 
--- createUsers
 INSERT INTO users
     VALUES 
         ("u001", "user1@email.com", 12301), 
         ("u002", "user2@email.com", 12302);
+INSERT INTO users VALUES ("u003", "user3@email.com", 12303);
 
--- deleteUsers
 DELETE from users
 WHERE "id"='u002';
 
--- createUser
-INSERT INTO users
-    VALUES ("u003", "user3@email.com", 12303);
-
--- editUser
 UPDATE users
  SET password = 12300 
  WHERE id = 'u000';
 
--- sortUsersByEmail
+SELECT * FROM users;
+
 SELECT * FROM users
 ORDER BY email ASC;
 
 
+-- |    PRODUCTS    |
 
---  --------------------| PRODUCTS |---------------------------
--- Create products
 CREATE TABLE
     products (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
@@ -50,10 +41,6 @@ CREATE TABLE
         category TEXT NOT NULL
     );
 
--- getAllProducts
-SELECT * FROM products;
-
--- createProducts
 INSERT INTO products
     VALUES 
         ("p000", "Product00", 25, "Museum"),
@@ -62,40 +49,34 @@ INSERT INTO products
         ("p003", "Product03", 5, "Library"), 
         ("p004", "Product04", 30, "Museum");
 
--- getProductById
-SELECT * FROM products
-WHERE name = 'monitor';
+INSERT INTO products VALUES ("p005", "Product05", 40, "Observatory");
 
--- createProducts
-INSERT INTO products
-    VALUES ("p005", "Product05", 40, "Observatory");
-
--- getProductById
-SELECT * FROM products
-WHERE id = "p002";
-
--- deleteProduct
 DELETE FROM products
 WHERE id = "p005";
 
--- editProducts
 UPDATE products
     SET category = "museum"
     WHERE id = "p004";
 
--- sortProductsByPrice / limit 20
+SELECT * FROM products;
+
+SELECT * FROM products
+WHERE name = 'monitor';
+
+SELECT * FROM products
+WHERE id = "p002";
+
 SELECT * FROM products
 ORDER BY price ASC
 LIMIT 20;
 
--- sortProductByPrice / between 10 and 30
 SELECT * FROM products
 WHERE price > 10 AND price < 30
 ORDER BY price ASC;
 
 
---  --------------------| PURCHASES |---------------------------
--- createPurchases
+-- |    PURCHASES   |
+
 CREATE TABLE purchases (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     total_price REAL NOT NULL,
@@ -104,9 +85,7 @@ CREATE TABLE purchases (
     buyer_id TEXT NOT NULL,
     Foreign Key (buyer_id) REFERENCES users(id)
 );
-SELECT * FROM purchases;
 
--- createPurchase
 INSERT INTO purchases
     VALUES
         ("pr000", 120, 0, NUll, "u000"),
@@ -123,7 +102,42 @@ UPDATE purchases
 SET delivered_at = DATE("now") 
 WHERE id in ("p000","p001","pr002","pr003","p004","p005");
 
+SELECT * FROM purchases;
+
 SELECT * FROM purchases
 INNER JOIN users
 ON purchases.buyer_id = users.id
 WHERE users.id = "u000";
+
+
+-- |  PURCHASE PRODUCTS   |
+
+DROP TABLE purchases_products;
+
+CREATE TABLE purchases_products (
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL
+);
+
+INSERT INTO purchases_products
+    VALUES
+        ("pr000", "p002", 1),
+        ("pr000", "p001", 2),
+        ("pr001", "p000", 2),
+        ("pr002", "p003", 10),
+        ("pr002", "p000", 10),
+        ("pr002", "p002", 10);
+
+SELECT 
+purchases.id as purchaseId,
+purchases.total_price,
+purchases.buyer_id as buyerId,
+products.id AS productId,
+purchases_products.quantity,
+products.name AS productName,
+products.category,
+products.price AS productPrice
+FROM purchases
+INNER JOIN purchases_products ON purchases.id = purchases_products.purchase_id
+INNER JOIN products ON purchases_products.product_id = products.id;
