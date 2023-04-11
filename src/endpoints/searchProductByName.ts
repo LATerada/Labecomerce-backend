@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { products } from "../database";
+import { db } from "../database/knex";
 import { TProduct } from "../types";
 
-export const searchProductsByName = (req: Request, res: Response) => {
+export const searchProductsByName = async (req: Request, res: Response) => {
   try {
     const q = req.query.q as string;
 
@@ -11,9 +11,15 @@ export const searchProductsByName = (req: Request, res: Response) => {
       throw new Error("'q' deve possuir pelo menos um caractere.");
     }
 
-    const result: TProduct[] = products.filter((product) => {
-      return product.name.toLowerCase().includes(q.toLowerCase());
-    });
+    // const result: TProduct[] = products.filter((product) => {
+    //   return product.name.toLowerCase().includes(q.toLowerCase());
+    // });
+
+    const result: TProduct[] = await db.raw(`
+    SELECT * FROM products
+    WHERE "name" LIKE "%${q}%";
+    `);
+
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

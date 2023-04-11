@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
-import { products } from "../database";
+// import { products } from "../database";
+import { db } from "../database/knex";
 import { TICKETS_CATEGORY, TProduct } from "../types";
 
-export const createProduct = (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response) => {
   try {
     const id = req.body.id as string;
     const name = req.body.name as string;
     const price = req.body.price as number;
     const category = req.body.category as TICKETS_CATEGORY;
+    const description = req.body.description as string;
+    const imageUrl = req.body.image_url as string;
 
     if (!id) {
       res.status(400);
@@ -20,7 +23,7 @@ export const createProduct = (req: Request, res: Response) => {
     if (!name) {
       res.status(400);
       throw new Error("É necessário incluir um 'name'");
-    }else if (typeof name !== "string") {
+    } else if (typeof name !== "string") {
       res.status(400);
       throw new Error("'name' deve ser do tipo string");
     }
@@ -54,9 +57,29 @@ export const createProduct = (req: Request, res: Response) => {
       }
     }
 
-    const idUsed = products.find((product) => {
-      return product.id === id;
-    });
+    if (!description) {
+      res.status(400);
+      throw new Error("É necessário incluir um 'description'");
+    } else if (typeof description !== "string") {
+      res.status(400);
+      throw new Error("'description' deve ser do tipo string");
+    }
+
+    if (!imageUrl) {
+      res.status(400);
+      throw new Error("É necessário incluir um 'imageUrl'");
+    } else if (typeof imageUrl !== "string") {
+      res.status(400);
+      throw new Error("'imageUrl' deve ser do tipo string");
+    }
+
+    const idUsed = await db.raw(`
+    SELECT * FROM users
+    WHERE id LIKE ${id};
+    `);
+    // products.find((product) => {
+    //   return product.id === id;
+    // });
     if (idUsed) {
       res.status(409);
       throw new Error("'id' já existe.");
@@ -67,8 +90,15 @@ export const createProduct = (req: Request, res: Response) => {
       name,
       price,
       category,
+      description,
+      imageUrl,
     };
-    products.push(newProduct);
+    // products.push(newProduct);
+
+    await db.raw(`
+    INSERT INTO products
+    VALUES ("${newProduct.id}","${newProduct.name}","${newProduct.price}","${newProduct.category}","${newProduct.description}","${newProduct.imageUrl}")
+    `);
     res.status(201).send("Produto cadastrado com sucesso");
   } catch (error) {
     console.log(error);
