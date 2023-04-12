@@ -14,6 +14,7 @@ import { getAllProductsByQuery } from "./endpoints/getAllProductsByQuery";
 // import { deleteProductById } from "./endpoints/deleteProductById";
 // import { editUserById } from "./endpoints/editUserById";
 import { editProductById } from "./endpoints/editProductById";
+import { deletePurchaseById } from "./endpoints/deletePurchaseById";
 // import { getAllPurchases } from "./endpoints/getAllPurhcases";
 
 const app = express();
@@ -69,3 +70,6 @@ app.get("/products/:id", getProductById);
 
 // editProductById
 app.put("/products/:id", editProductById);
+
+// // deletePurchaseById
+app.delete("/purchases/:id", deletePurchaseById);
