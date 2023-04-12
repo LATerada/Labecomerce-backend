@@ -13,7 +13,7 @@ import { getAllProductsByQuery } from "./endpoints/getAllProductsByQuery";
 // import { deleteUserById } from "./endpoints/deleteUserById";
 // import { deleteProductById } from "./endpoints/deleteProductById";
 // import { editUserById } from "./endpoints/editUserById";
-// import { editProductById } from "./endpoints/editProductById";
+import { editProductById } from "./endpoints/editProductById";
 // import { getAllPurchases } from "./endpoints/getAllPurhcases";
 
 const app = express();
@@ -67,5 +67,5 @@ app.get("/products/:id", getProductById);
 // // editUserById
 // app.put("/users/:id", editUserById);
 
-// // editProductById
-// app.put("/products/:id", editProductById);
+// editProductById
+app.put("/products/:id", editProductById);
