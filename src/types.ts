@@ -8,7 +8,7 @@ export type TProduct = {
   id: string;
   name: string;
   price: number;
-  category: TICKETS_CATEGORY;
+  // category: TICKETS_CATEGORY;
   description: string;
   imageUrl: string;
 };
@@ -19,9 +19,9 @@ export type TPurschase = {
   // quantity: number;
   totalPrice: number;
 };
-export enum TICKETS_CATEGORY {
-  MUSEUM = "museum",
-  OBSERVATORY = "observatory",
-  LIBRARY = "library",
-  ZOO = "zoo",
-}
+// export enum TICKETS_CATEGORY {
+//   MUSEUM = "museum",
+//   OBSERVATORY = "observatory",
+//   LIBRARY = "library",
+//   ZOO = "zoo",
+// }

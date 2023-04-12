@@ -44,19 +44,21 @@ export const createUsers = async (req: Request, res: Response) => {
       throw new Error("'password' com no mínimo 4 caracteres.");
     }
 
-    const idUsed = await db.raw(`
-    SELECT * FROM users
-    WHERE id LIKE "${id}";
-    `);
+    // const idUsed = await db.raw(`
+    // SELECT * FROM users
+    // WHERE id LIKE "${id}";
+    // `);
+    const idUsed = await db("users").where({ id: id });
     if (!idUsed) {
       res.status(409);
       throw new Error("'id' já existe.");
     }
 
-    const emailUsed = await db.raw(`
-    SELECT * FROM users
-    WHERE email LIKE "${email}";
-    `);
+    // const emailUsed = await db.raw(`
+    // SELECT * FROM users
+    // WHERE email LIKE "${email}";
+    // `);
+    const emailUsed = await db("users").where({ email: email });
     if (!emailUsed) {
       res.status(409);
       throw new Error("'email' já existe.");
@@ -69,10 +71,13 @@ export const createUsers = async (req: Request, res: Response) => {
       password,
     };
 
-    await db.raw(`
-    INSERT INTO users (id, name, email, password)
-      VALUES ("${newUser.id}","${newUser.name}","${newUser.email}","${newUser.password}")
-    `);
+    // await db.raw(`
+    // INSERT INTO users (id, name, email, password)
+    //   VALUES ("${newUser.id}","${newUser.name}","${newUser.email}","${newUser.password}")
+    // `);
+
+    await db("users").insert(newUser);
+
     res.status(201).send("Usuário criado com sucesso.");
   } catch (error) {
     console.log(error);

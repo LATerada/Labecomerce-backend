@@ -1,4 +1,4 @@
-import { TICKETS_CATEGORY, TProduct, TPurschase, TUser } from "./types";
+import { TProduct, TPurschase, TUser } from "./types";
 
 export const users: TUser[] = [
   {
@@ -9,7 +9,7 @@ export const users: TUser[] = [
   },
   {
     id: "user1",
-    name:"User1",
+    name: "User1",
     email: "user1@gmail.com",
     password: "12301",
   },
@@ -20,7 +20,7 @@ export const products: TProduct[] = [
     id: "ProductO",
     name: "ProductO",
     price: 100,
-    category: TICKETS_CATEGORY.OBSERVATORY,
+    // category: TICKETS_CATEGORY.OBSERVATORY,
     description: "description",
     imageUrl: "imageUrl",
   },
@@ -28,7 +28,7 @@ export const products: TProduct[] = [
     id: "Product1",
     name: "Product1",
     price: 120,
-    category: TICKETS_CATEGORY.MUSEUM,
+    // category: TICKETS_CATEGORY.MUSEUM,
     description: "description",
     imageUrl: "imageUrl",
   },
@@ -54,7 +54,6 @@ export const purchases: TPurschase[] = [
 // // USER
 // console.log(`
 
-
 // | USER |
 // `);
 // const createUser = (id: string, email: string, password: string): string => {
@@ -79,7 +78,6 @@ export const purchases: TPurschase[] = [
 
 // // PRODUCT
 // console.log(`
-
 
 // | PRODUCT |
 // `);
@@ -123,7 +121,6 @@ export const purchases: TPurschase[] = [
 
 // // PURCHASE
 // console.log(`
-
 
 // | PURCHASE |
 // `);
