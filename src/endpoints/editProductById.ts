@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { products } from "../database";
-import { TICKETS_CATEGORY } from "../types";
+// import { TICKETS_CATEGORY } from "../types";
 
 export const editProductById = (req: Request, res: Response) => {
   try {
@@ -9,7 +9,7 @@ export const editProductById = (req: Request, res: Response) => {
     const newId = req.body.id as string | undefined;
     const newName = req.body.name as string | undefined;
     const newPrice = req.body.price as number | undefined;
-    const newCategory = req.body.category as TICKETS_CATEGORY | undefined;
+    // const newCategory = req.body.category as TICKETS_CATEGORY | undefined;
 
     if (newId !== undefined) {
       if (typeof newId !== "string") {
@@ -36,17 +36,17 @@ export const editProductById = (req: Request, res: Response) => {
       }
     }
 
-    if (newCategory !== undefined) {
-      if (
-        newCategory !== TICKETS_CATEGORY.LIBRARY &&
-        newCategory !== TICKETS_CATEGORY.MUSEUM &&
-        newCategory !== TICKETS_CATEGORY.OBSERVATORY &&
-        newCategory !== TICKETS_CATEGORY.ZOO
-      ) {
-        res.status(400);
-        throw new Error("'type' deve ser um dos tipos válidos");
-      }
-    }
+    // if (newCategory !== undefined) {
+    //   if (
+    //     newCategory !== TICKETS_CATEGORY.LIBRARY &&
+    //     newCategory !== TICKETS_CATEGORY.MUSEUM &&
+    //     newCategory !== TICKETS_CATEGORY.OBSERVATORY &&
+    //     newCategory !== TICKETS_CATEGORY.ZOO
+    //   ) {
+    //     res.status(400);
+    //     throw new Error("'type' deve ser um dos tipos válidos");
+    //   }
+    // }
 
     const newIdUsed = products.find((product) => {
       return product.id === newId;
@@ -74,7 +74,7 @@ export const editProductById = (req: Request, res: Response) => {
       productToEdit.id = newId || productToEdit.id;
       productToEdit.name = newName || productToEdit.name;
       productToEdit.price = isNaN(newPrice) ? productToEdit.price : newPrice;
-      productToEdit.category = newCategory || productToEdit.category;
+      // productToEdit.category = newCategory || productToEdit.category;
     } else if (!productToEdit) {
       res.status(404);
       throw new Error("Produto não cadastrado.");
