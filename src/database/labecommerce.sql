@@ -127,28 +127,6 @@ VALUES ("pr000", "u000", 120), ("pr001", "u000", 50), ("pr002", "u001", 500), ("
 
 DELETE FROM purchases WHERE id = "pr003";
 
--- UPDATE purchases
-
--- SET delivered_at = DATE("now")
-
--- WHERE
-
---     id in (
-
---         "p000",
-
---         "p001",
-
---         "pr002",
-
---         "pr003",
-
---         "p004",
-
---         "p005"
-
---     );
-
 SELECT * FROM purchases;
 
 SELECT *

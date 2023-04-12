@@ -1,90 +1,56 @@
 import { Request, Response } from "express";
-// import { products, purchases, users } from "../database";
 import { db } from "../database/knex";
-import { TPurschase } from "../types";
+import { TProduct, TPurschase } from "../types";
 
 export const createPurchase = async (req: Request, res: Response) => {
   try {
-    const productId = req.body.productId as string;
-    const quantity = req.body.quantity as number;
-    const purchaseId = req.body.id as string;
-    const totalPrice = req.body.totalPrice as number;
-    // const paid = req.body.paid as boolean;
-    const deliveredAt = req.body.delivered_at as string;
-    const userId = req.body.user_id as string;
+    const { id, buyer, totalPrice } = req.body;
 
-    if (!purchaseId) {
+    if (typeof id !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'purchaseId'");
-    } else if (typeof purchaseId !== "string") {
+      throw new Error("'id' deve ser string");
+    }
+    if (id.length < 4) {
       res.status(400);
-      throw new Error("'purchaseId' deve ser do tipo string");
+      throw new Error("'id' deve possuir pelo menos 4 caracteres");
     }
 
-    if (!totalPrice) {
+    if (typeof buyer !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'totalPrice'");
+      throw new Error("'buyer' deve ser string");
+    }
+    if (buyer.length < 4) {
+      res.status(400);
+      throw new Error("'buyer' deve possuir pelo menos 4 caracteres");
     }
 
-    if (!userId) {
+    if (typeof totalPrice !== "number") {
       res.status(400);
-      throw new Error("É necessário incluir um 'userId'");
-    } else if (typeof userId !== "string") {
+      throw new Error("'totalPrice' deve ser number");
+    }
+    if (totalPrice < 0) {
       res.status(400);
-      throw new Error("'userId' deve ser do tipo string");
+      throw new Error("'totalPrice' deve ser maior que 0");
     }
 
-    if (!quantity) {
+    const [purchaseIdAlreadyExists]: TProduct[] | undefined[] = await db(
+      "products"
+    ).where({ id });
+
+    if (purchaseIdAlreadyExists) {
       res.status(400);
-      throw new Error("É necessário incluir um 'quantity'");
-    } else if (quantity) {
-      if (typeof quantity !== "number") {
-        res.status(400);
-        throw new Error("'quantity' deve ser do tipo number");
-      }
-      if (quantity < 0) {
-        res.status(400);
-        throw new Error("'quantity' deve ser maior ou igual a zero.");
-      }
-    }
-
-    const userIdExists = await db.raw(`
-    SELECT * FROM users
-    WHERE id LIKE ${userId}};
-    `);
- 
-    if (!userIdExists) {
-      res.status(404);
-      throw new Error("Usuário não encontrado.");
-    }
-
-    const productIdExists = await db.raw(`
-    SELECT * FROM users
-    WHERE id LIKE ${productId}};
-    `);
-
-    if (!productIdExists) {
-      res.status(404);
-      throw new Error("Produto não encontrado.");
-    }
-
-    if (totalPrice !== productIdExists.price * quantity) {
-      res.status(400);
-      throw new Error("O Cálculo de 'totalPrice' está incorreto");
+      throw new Error("'id' já existe");
     }
 
     const newPurchase: TPurschase = {
-      productId,
-      purchaseId,
-      totalPrice,
-      userId,
+      id,
+      buyer,
+      total_price: totalPrice,
     };
 
-    await db.raw(`
-    INSERT INTO purchases (productId, purchaseId, totalPrice, userId)
-      VALUES ("${newPurchase.productId}","${newPurchase.purchaseId}","${newPurchase.totalPrice}","${newPurchase.userId}",)
-    `);
-    res.status(201).send("Compra realizada com sucesso");
+    await db("purchases").insert(newPurchase);
+
+    res.status(201).send("Pedido realizado com sucesso");
   } catch (error) {
     console.log(error);
 
