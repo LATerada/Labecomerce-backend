@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
-import { products } from "../database";
+// import { products } from "../database";
+import { db } from "../database/knex";
 
-export const getProductById = (req: Request, res: Response) => {
+export const getProductById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const product = products.find((product) => {
-      return product.id === id;
-    });
+
+    // const product = products.find((product) => {
+    //   return product.id === id;
+    // });
+    const [product] = await db("products").where({ id: id });
 
     if (!product) {
       res.status(404);

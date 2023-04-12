@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 // import { products } from "../database";
 import { db } from "../database/knex";
-import { TICKETS_CATEGORY, TProduct } from "../types";
+import { TProduct } from "../types";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const id = req.body.id as string;
     const name = req.body.name as string;
     const price = req.body.price as number;
-    const category = req.body.category as TICKETS_CATEGORY;
+    // const category = req.body.category as TICKETS_CATEGORY;
     const description = req.body.description as string;
-    const imageUrl = req.body.image_url as string;
+    const imageUrl = req.body.imageUrl as string;
 
     if (!id) {
       res.status(400);
@@ -42,20 +42,20 @@ export const createProduct = async (req: Request, res: Response) => {
       }
     }
 
-    if (!category) {
-      res.status(400);
-      throw new Error("É necessário incluir 'category'");
-    } else if (category) {
-      if (
-        category !== TICKETS_CATEGORY.LIBRARY &&
-        category !== TICKETS_CATEGORY.MUSEUM &&
-        category !== TICKETS_CATEGORY.OBSERVATORY &&
-        category !== TICKETS_CATEGORY.ZOO
-      ) {
-        res.status(400);
-        throw new Error("'type' deve ser um dos tipos válidos");
-      }
-    }
+    // if (!category) {
+    //   res.status(400);
+    //   throw new Error("É necessário incluir 'category'");
+    // } else if (category) {
+    //   if (
+    //     category !== TICKETS_CATEGORY.LIBRARY &&
+    //     category !== TICKETS_CATEGORY.MUSEUM &&
+    //     category !== TICKETS_CATEGORY.OBSERVATORY &&
+    //     category !== TICKETS_CATEGORY.ZOO
+    //   ) {
+    //     res.status(400);
+    //     throw new Error("'type' deve ser um dos tipos válidos");
+    //   }
+    // }
 
     if (!description) {
       res.status(400);
@@ -73,13 +73,15 @@ export const createProduct = async (req: Request, res: Response) => {
       throw new Error("'imageUrl' deve ser do tipo string");
     }
 
-    const idUsed = await db.raw(`
-    SELECT * FROM users
-    WHERE id LIKE ${id};
-    `);
+    // const idUsed = await db.raw(`
+    // SELECT * FROM users
+    // WHERE id LIKE ${id};
+    // `);
+
     // products.find((product) => {
     //   return product.id === id;
     // });
+    const [idUsed] = await db("users").where({ id: id });
     if (idUsed) {
       res.status(409);
       throw new Error("'id' já existe.");
@@ -89,16 +91,17 @@ export const createProduct = async (req: Request, res: Response) => {
       id,
       name,
       price,
-      category,
+      // category,
       description,
       imageUrl,
     };
     // products.push(newProduct);
 
-    await db.raw(`
-    INSERT INTO products
-    VALUES ("${newProduct.id}","${newProduct.name}","${newProduct.price}","${newProduct.category}","${newProduct.description}","${newProduct.imageUrl}")
-    `);
+    // await db.raw(`
+    // INSERT INTO products
+    // VALUES ("${newProduct.id}","${newProduct.name}","${newProduct.price}","${newProduct.description}","${newProduct.imageUrl}")
+    // `);
+    await db("products").insert(newProduct);
     res.status(201).send("Produto cadastrado com sucesso");
   } catch (error) {
     console.log(error);
