@@ -4,14 +4,15 @@ export type TUser = {
   email: string;
   password: string;
 };
+
 export type TProduct = {
   id: string;
   name: string;
   price: number;
-  // category: TICKETS_CATEGORY;
   description: string;
-  imageUrl: string;
+  image_url: string;
 };
+
 export type TPurschase = {
   purchaseId: string;
   userId: string;
@@ -19,9 +20,3 @@ export type TPurschase = {
   // quantity: number;
   totalPrice: number;
 };
-// export enum TICKETS_CATEGORY {
-//   MUSEUM = "museum",
-//   OBSERVATORY = "observatory",
-//   LIBRARY = "library",
-//   ZOO = "zoo",
-// }

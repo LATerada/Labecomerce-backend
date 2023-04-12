@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-// import { products } from "../database";
 import { db } from "../database/knex";
 import { TProduct } from "../types";
 
@@ -8,81 +7,50 @@ export const createProduct = async (req: Request, res: Response) => {
     const id = req.body.id as string;
     const name = req.body.name as string;
     const price = req.body.price as number;
-    // const category = req.body.category as TICKETS_CATEGORY;
     const description = req.body.description as string;
-    const imageUrl = req.body.imageUrl as string;
+    const imageUrl = req.body.image_url as string;
 
-    if (!id) {
+    if (typeof id !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'id'");
-    } else if (typeof id !== "string") {
+      throw new Error("'id' deve ser string");
+    }
+    if (id.length < 4) {
       res.status(400);
-      throw new Error("'id' deve ser do tipo string");
+      throw new Error("'id' deve possuir pelo menos 4 caracteres");
     }
 
-    if (!name) {
+    if (typeof name !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'name'");
-    } else if (typeof name !== "string") {
+      throw new Error("'name' deve ser string");
+    }
+    if (name.length < 4) {
       res.status(400);
-      throw new Error("'name' deve ser do tipo string");
+      throw new Error("'name' deve possuir pelo menos 4 caracteres");
     }
 
-    if (!price) {
+    if (typeof price !== "number") {
       res.status(400);
-      throw new Error("É necessário incluir um 'price'");
-    } else if (price) {
-      if (typeof price !== "number") {
-        res.status(400);
-        throw new Error("'price' deve ser do tipo number");
-      }
-      if (price < 0) {
-        res.status(400);
-        throw new Error("'price' deve ser maior ou igual a zero.");
-      }
+      throw new Error("'price' deve ser string");
+    }
+    if (price < 0) {
+      res.status(400);
+      throw new Error("'price' deve ser maior que 0");
     }
 
-    // if (!category) {
-    //   res.status(400);
-    //   throw new Error("É necessário incluir 'category'");
-    // } else if (category) {
-    //   if (
-    //     category !== TICKETS_CATEGORY.LIBRARY &&
-    //     category !== TICKETS_CATEGORY.MUSEUM &&
-    //     category !== TICKETS_CATEGORY.OBSERVATORY &&
-    //     category !== TICKETS_CATEGORY.ZOO
-    //   ) {
-    //     res.status(400);
-    //     throw new Error("'type' deve ser um dos tipos válidos");
-    //   }
-    // }
-
-    if (!description) {
+    if (typeof description !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'description'");
-    } else if (typeof description !== "string") {
-      res.status(400);
-      throw new Error("'description' deve ser do tipo string");
+      throw new Error("'description' deve ser string");
     }
 
-    if (!imageUrl) {
+    if (typeof imageUrl !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'imageUrl'");
-    } else if (typeof imageUrl !== "string") {
-      res.status(400);
-      throw new Error("'imageUrl' deve ser do tipo string");
+      throw new Error("'imageUrl' deve ser string");
     }
 
-    // const idUsed = await db.raw(`
-    // SELECT * FROM users
-    // WHERE id LIKE ${id};
-    // `);
-
-    // products.find((product) => {
-    //   return product.id === id;
-    // });
-    const [idUsed] = await db("users").where({ id: id });
-    if (idUsed) {
+    const [userIdAlreadyExists]: TProduct[] = await db("products").where({
+      id,
+    });
+    if (userIdAlreadyExists) {
       res.status(409);
       throw new Error("'id' já existe.");
     }
@@ -91,16 +59,10 @@ export const createProduct = async (req: Request, res: Response) => {
       id,
       name,
       price,
-      // category,
       description,
-      imageUrl,
+      image_url: imageUrl,
     };
-    // products.push(newProduct);
 
-    // await db.raw(`
-    // INSERT INTO products
-    // VALUES ("${newProduct.id}","${newProduct.name}","${newProduct.price}","${newProduct.description}","${newProduct.imageUrl}")
-    // `);
     await db("products").insert(newProduct);
     res.status(201).send("Produto cadastrado com sucesso");
   } catch (error) {
