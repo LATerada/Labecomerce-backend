@@ -14,9 +14,7 @@ export type TProduct = {
 };
 
 export type TPurschase = {
-  purchaseId: string;
-  userId: string;
-  productId: string;
-  // quantity: number;
-  totalPrice: number;
+  id: string;
+  buyer: string;
+  total_price: number;
 };
