@@ -8,6 +8,7 @@ import { searchProductsByName } from "./endpoints/searchProductByName";
 import { createProduct } from "./endpoints/createProduct";
 import { createPurchase } from "./endpoints/createPurchase";
 import { getProductById } from "./endpoints/getProductById";
+import { getAllProductsByQuery } from "./endpoints/getAllProductsByQuery";
 // import { getUserPurchaseByUserId } from "./endpoints/getUserPurchaseByUserId";
 // import { deleteUserById } from "./endpoints/deleteUserById";
 // import { deleteProductById } from "./endpoints/deleteProductById";
@@ -29,6 +30,9 @@ app.get("/ping", test);
 
 //getAllUsers
 app.get("/users", getAllUsers);
+
+// getAllProductsByQuery
+app.get("/products", getAllProductsByQuery);
 
 // getAllProducts
 app.get("/products", getAllProducts);
