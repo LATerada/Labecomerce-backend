@@ -4,64 +4,55 @@ import { TUser } from "../types";
 
 export const createUsers = async (req: Request, res: Response) => {
   try {
-    const id = req.body.id as string;
-    const name = req.body.id as string;
-    const email = req.body.email as string;
-    const password = req.body.password as string;
+    const { id, name, email, password } = req.body;
 
-    if (!id) {
+    if (typeof id !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'id'");
-    } else if (typeof id !== "string") {
+      throw new Error("'id' deve ser string");
+    }
+    if (id.length < 4) {
       res.status(400);
-      throw new Error("'id' deve ser do tipo string");
+      throw new Error("'id' deve possuir pelo menos 4 caracteres");
     }
 
-    if (!name) {
+    if (typeof name !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'name'");
-    } else if (typeof id !== "string") {
+      throw new Error("'name' deve ser string");
+    }
+    if (name.length < 2) {
       res.status(400);
-      throw new Error("'name' deve ser do tipo string");
+      throw new Error("'name' deve possuir pelo menos 2 caracteres");
     }
 
-    if (!email) {
+    if (typeof email !== "string") {
       res.status(400);
-      throw new Error("É necessário incluir um 'email'");
-    } else if (typeof email !== "string") {
+      throw new Error("'email' deve ser string");
+    }
+    if (
+      !password.match(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,12}$/g
+      )
+    ) {
       res.status(400);
-      throw new Error("'email' deve ser do tipo string");
+      throw new Error(
+        "'password' deve possuir entre 8 e 12 caracteres, com letras maiúsculas e minúsculas e no mínimo um número e um caractere especial"
+      );
     }
 
-    if (!password) {
+    const [userIdAlreadyExists]: TUser[] | undefined[] = await db(
+      "users"
+    ).where({ id });
+    if (userIdAlreadyExists) {
       res.status(400);
-      throw new Error("É necessário incluir um 'password'");
-    } else if (typeof password !== "string") {
-      res.status(400);
-      throw new Error("'password' deve ser do tipo string");
-    } else if (password.length <= 4) {
-      res.status(400);
-      throw new Error("'password' com no mínimo 4 caracteres.");
+      throw new Error("'id' já existe");
     }
 
-    // const idUsed = await db.raw(`
-    // SELECT * FROM users
-    // WHERE id LIKE "${id}";
-    // `);
-    const idUsed = await db("users").where({ id: id });
-    if (!idUsed) {
-      res.status(409);
-      throw new Error("'id' já existe.");
-    }
-
-    // const emailUsed = await db.raw(`
-    // SELECT * FROM users
-    // WHERE email LIKE "${email}";
-    // `);
-    const emailUsed = await db("users").where({ email: email });
-    if (!emailUsed) {
-      res.status(409);
-      throw new Error("'email' já existe.");
+    const [userEmailAlreadyExists]: TUser[] | undefined[] = await db(
+      "users"
+    ).where({ email });
+    if (userEmailAlreadyExists) {
+      res.status(400);
+      throw new Error("'email' já existe");
     }
 
     const newUser: TUser = {
@@ -71,14 +62,11 @@ export const createUsers = async (req: Request, res: Response) => {
       password,
     };
 
-    // await db.raw(`
-    // INSERT INTO users (id, name, email, password)
-    //   VALUES ("${newUser.id}","${newUser.name}","${newUser.email}","${newUser.password}")
-    // `);
-
     await db("users").insert(newUser);
 
-    res.status(201).send("Usuário criado com sucesso.");
+    res
+      .status(201)
+      .send({ message: "Usuário criado com sucesso.", user: newUser });
   } catch (error) {
     console.log(error);
 
