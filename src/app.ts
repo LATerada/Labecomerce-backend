@@ -11,7 +11,7 @@ import { getProductById } from "./endpoints/getProductById";
 import { getAllProductsByQuery } from "./endpoints/getAllProductsByQuery";
 // import { getUserPurchaseByUserId } from "./endpoints/getUserPurchaseByUserId";
 // import { deleteUserById } from "./endpoints/deleteUserById";
-// import { deleteProductById } from "./endpoints/deleteProductById";
+import { deleteProductById } from "./endpoints/deleteProductById";
 // import { editUserById } from "./endpoints/editUserById";
 import { editProductById } from "./endpoints/editProductById";
 import { deletePurchaseById } from "./endpoints/deletePurchaseById";
@@ -63,8 +63,8 @@ app.get("/products/:id", getProductById);
 // // deleteUserById
 // app.delete("/users/:id", deleteUserById);
 
-// // deleteProductById
-// app.delete("/products/:id", deleteProductById);
+// deleteProductById
+app.delete("/products/:id", deleteProductById);
 
 // // editUserById
 // app.put("/users/:id", editUserById);

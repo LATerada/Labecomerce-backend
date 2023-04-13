@@ -8,7 +8,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const name = req.body.name as string;
     const price = req.body.price as number;
     const description = req.body.description as string;
-    const imageUrl = req.body.image_url as string;
+    const imageUrl = req.body.imageUrl as string;
 
     if (typeof id !== "string") {
       res.status(400);
