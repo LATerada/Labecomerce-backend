@@ -117,8 +117,7 @@ CREATE TABLE
         total_price REAL NOT NULL,
         created_at DATE DEFAULT (DATETIME()),
         paid INTEGER DEFAULT (0),
-        -- delivered_at TEXT NOT NULL,
-        Foreign Key (buyer) REFERENCES users(id)
+        FOREIGN KEY (buyer) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 INSERT INTO
@@ -142,7 +141,9 @@ CREATE TABLE
     purchases_products (
         purchase_id TEXT NOT NULL,
         product_id TEXT NOT NULL,
-        quantity INTEGER NOT NULL
+        quantity INTEGER NOT NULL,
+        FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 INSERT INTO purchases_products
@@ -150,11 +151,12 @@ VALUES ("pr000", "p002", 1), ("pr000", "p001", 2), ("pr001", "p000", 2), ("pr002
 
 SELECT
     purchases.id as purchaseId,
-    purchases.total_price,
     purchases.buyer as buyerId,
     products.id AS productId,
     products.name AS productName,
-    products.price AS productPrice
+    purchases_products.quantity AS productQuantity,
+    products.price AS productPrice,
+    purchases.total_price
 FROM purchases
     INNER JOIN purchases_products ON purchases.id = purchases_products.purchase_id
     INNER JOIN products ON purchases_products.product_id = products.id;
