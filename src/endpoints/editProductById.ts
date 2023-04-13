@@ -80,7 +80,7 @@ export const editProductById = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .send({ mensagem: "Produto editadp com sucesso", product: newProduct });
+      .send({ mensagem: "Produto editado com sucesso", product: newProduct });
   } catch (error) {
     console.log(error);
 
