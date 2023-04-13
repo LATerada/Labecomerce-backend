@@ -65,7 +65,14 @@ export const createPurchase = async (req: Request, res: Response) => {
         buyer,
         total_price: totalPrice,
       };
+      const newPurchaseProduct: TPurchaseProduct = {
+        purchase_id: id,
+        product_id: productId,
+        quantity,
+      };
+
       await db("purchases").insert(newPurchase);
+      await db("purchases_products").insert(newPurchaseProduct);
     } else {
       const newPurchaseProduct: TPurchaseProduct = {
         purchase_id: id,
