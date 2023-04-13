@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { db } from "../database/knex";
-import { TPurschase } from "../types";
+import { TPurchase } from "../types";
 
 export const getPurchaseById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const [purchase]: TPurschase[] | undefined[] = await db("purchases").where({
+    const [purchase]: TPurchase[] | undefined[] = await db("purchases").where({
       id,
     });
 

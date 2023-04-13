@@ -13,8 +13,14 @@ export type TProduct = {
   image_url: string;
 };
 
-export type TPurschase = {
+export type TPurchase = {
   id: string;
   buyer: string;
   total_price: number;
+};
+
+export type TPurchaseProduct = {
+  purchase_id: string;
+  product_id: string;
+  quantity: number;
 };
