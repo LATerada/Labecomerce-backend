@@ -1,6 +1,6 @@
 # Projeto labecommerce-backend
 
-![Diagrama](.https://dbdiagram.io/d/63c6e8e5296d97641d7a4666)
+![Diagrama](https://dbdiagram.io/d/63c6e8e5296d97641d7a4666)
 Meu primeiro projeto do back-end, onde pratiquei toda a base de criação de uma API vinculada a um banco de dados real.
 
 ## Índice
