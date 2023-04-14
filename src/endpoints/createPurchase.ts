@@ -1,14 +1,10 @@
 import { Request, Response } from "express";
 import { db } from "../database/knex";
-import { TPurchase, TPurchaseProduct } from "../types";
+import { TProduct, TPurchase, TPurchaseProduct } from "../types";
 
 export const createPurchase = async (req: Request, res: Response) => {
   try {
-    const id = req.body.id as string;
-    const buyer = req.body.buyer as string;
-    const totalPrice = req.body.totalPrice as number;
-    const productId = req.body.productId as string;
-    const quantity = req.body.quantity as number;
+    const { id, buyer, products } = req.body;
 
     if (typeof id !== "string") {
       res.status(400);
@@ -28,58 +24,79 @@ export const createPurchase = async (req: Request, res: Response) => {
       throw new Error("'buyer' deve possuir pelo menos 4 caracteres");
     }
 
-    if (typeof totalPrice !== "number") {
+    if (products.length < 0) {
       res.status(400);
-      throw new Error("'totalPrice' deve ser number");
+      throw new Error("A compra deve ter pelo menos um produto");
     }
-    if (totalPrice < 0) {
-      res.status(400);
-      throw new Error("'totalPrice' deve ser maior que 0");
-    }
+    for (let product of products) {
+      const [productExists]: TProduct[] | undefined[] = await db(
+        "products"
+      ).where({ id: product.productId });
 
-    if (typeof productId !== "string") {
-      res.status(400);
-      throw new Error("'productId' deve ser string");
-    }
-    if (productId.length < 4) {
-      res.status(400);
-      throw new Error("'productId' deve possuir pelo menos 4 caracteres");
-    }
+      if (!productExists) {
+        res.status(404);
+        throw new Error(`Produto de 'id' ${product.id} não encontrado`);
+      }
 
-    if (typeof quantity !== "number") {
-      res.status(400);
-      throw new Error("'quantity' deve ser number");
-    }
-    if (quantity < 0) {
-      res.status(400);
-      throw new Error("'quantity' deve ser maior que 0");
+      if (typeof product.quantity !== "number") {
+        res.status(400);
+        throw new Error("'quantity' deve ser number");
+      }
+      if (product.quantity < 0) {
+        res.status(400);
+        throw new Error("'quantity' deve ser maior que 0");
+      }
     }
 
     const [purchaseIdAlreadyExists]: TPurchase[] | undefined[] = await db(
       "purchases"
     ).where({ id });
 
-    if (!purchaseIdAlreadyExists) {
-      const newPurchase: TPurchase = {
-        id,
-        buyer,
-        total_price: totalPrice,
-      };
-      const newPurchaseProduct: TPurchaseProduct = {
-        purchase_id: id,
-        product_id: productId,
-        quantity,
-      };
+    if (purchaseIdAlreadyExists) {
+      res.status(400);
+      throw new Error("'id' da compra já existe");
+    }
 
-      await db("purchases").insert(newPurchase);
-      await db("purchases_products").insert(newPurchaseProduct);
-    } else {
-      const newPurchaseProduct: TPurchaseProduct = {
-        purchase_id: id,
-        product_id: productId,
-        quantity,
-      };
-      await db("purchases_products").insert(newPurchaseProduct);
+    let purchaseTotalPrice = 0;
+    for (let product of products) {
+      const [productWithPrice] = await db("products").where({
+        id: product.productId,
+      });
+      purchaseTotalPrice += productWithPrice.price * product.quantity;
+    }
+
+    const newPurchase: TPurchase = {
+      id,
+      buyer,
+      total_price: purchaseTotalPrice,
+    };
+    await db("purchases").insert(newPurchase);
+
+    for (let product of products) {
+      const [purchaseProductAlreadyExists]: TPurchaseProduct[] | undefined[] =
+        await db("purchases_products")
+          .where({ purchase_id: id })
+          .andWhere({ product_id: product.productId });
+
+      if (purchaseProductAlreadyExists) {
+        const newPurchaseProduct: TPurchaseProduct = {
+          ...purchaseProductAlreadyExists,
+          quantity: purchaseProductAlreadyExists.quantity + product.quantity,
+        };
+
+        await db("purchases_products")
+          .update(newPurchaseProduct)
+          .where({ purchase_id: id })
+          .andWhere({ product_id: product.productId });
+      } else {
+        const newPurchaseProduct: TPurchaseProduct = {
+          purchase_id: id,
+          product_id: product.productId,
+          quantity: product.quantity,
+        };
+
+        await db("purchases_products").insert(newPurchaseProduct);
+      }
     }
 
     res.status(201).send("Pedido realizado com sucesso");
