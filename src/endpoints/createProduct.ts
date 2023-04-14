@@ -4,11 +4,7 @@ import { TProduct } from "../types";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const id = req.body.id as string;
-    const name = req.body.name as string;
-    const price = req.body.price as number;
-    const description = req.body.description as string;
-    const imageUrl = req.body.imageUrl as string;
+    const { id, name, price, description, imageUrl } = req.body;
 
     if (typeof id !== "string") {
       res.status(400);
@@ -64,6 +60,7 @@ export const createProduct = async (req: Request, res: Response) => {
     };
 
     await db("products").insert(newProduct);
+
     res.status(201).send("Produto cadastrado com sucesso");
   } catch (error) {
     console.log(error);
