@@ -28,6 +28,7 @@ export const createUsers = async (req: Request, res: Response) => {
       res.status(400);
       throw new Error("'email' deve ser string");
     }
+
     if (
       !password.match(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,12}$/g
