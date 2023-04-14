@@ -7,15 +7,15 @@ import { createPurchase } from "./endpoints/createPurchase";
 import { getAllUsers } from "./endpoints/getAllUsers";
 import { getAllProducts } from "./endpoints/getAllProducts";
 import { getPurchaseById } from "./endpoints/getPurchaseById";
-// import { searchProductsByName } from "./endpoints/searchProductByName";
+import { editProductById } from "./endpoints/editProductById";
+import { deletePurchaseById } from "./endpoints/deletePurchaseById";
+import { deleteProductById } from "./endpoints/deleteProductById";
+// import { getProductsByName } from "./endpoints/searchProductByName";
 // import { getProductById } from "./endpoints/getProductById";
 // import { getUserPurchaseByUserId } from "./endpoints/getUserPurchaseByUserId";
 // import { deleteUserById } from "./endpoints/deleteUserById";
-// import { deleteProductById } from "./endpoints/deleteProductById";
-// import { editUserById } from "./endpoints/editUserById";
-import { editProductById } from "./endpoints/editProductById";
-import { deletePurchaseById } from "./endpoints/deletePurchaseById";
 
+// import { editUserById } from "./endpoints/editUserById";
 // import { getAllPurchases } from "./endpoints/getAllPurhcases";
 
 const app = express();
@@ -51,14 +51,17 @@ app.get("/purchases/:id", getPurchaseById);
 // editProductById
 app.put("/products/:id", editProductById);
 
+// deleteProductById
+app.delete("/products/:id", deleteProductById);
+
 // // deletePurchaseById
 app.delete("/purchases/:id", deletePurchaseById);
 
 // //getAllPurchases
 // app.get("/purchases", getAllPurchases);
 
-// // searchProductByName
-// app.get("/products/search", searchProductsByName);
+// // getProductByName
+// app.get("/products/search", getProductsByName);
 
 // // getProductById
 // app.get("/products/:id", getProductById);
@@ -68,9 +71,6 @@ app.delete("/purchases/:id", deletePurchaseById);
 
 // // deleteUserById
 // app.delete("/users/:id", deleteUserById);
-
-// // deleteProductById
-// app.delete("/products/:id", deleteProductById);
 
 // // editUserById
 // app.put("/users/:id", editUserById);
